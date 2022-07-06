@@ -57,14 +57,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
+  <metadata name="Tick.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>26, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ChargeIcon.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vQAADr0BR/uQrQAAAn9JREFUeF7tnMtNA0EQBR0IiRAIgZAIUSAZuHLmSg7kwAkjrkBLg4Sg197PzPQb
+        vAAADrwBlbxySQAAAn9JREFUeF7tnMtNA0EQBR0IiRAIgZAIUSAZuHLmSg7kwAkjrkBLg4Sg197PzPQb
         d5X0zgxdzGPdK9gBAMB87g5X3/kUz0s5bQLsm/WHoJOHt8ty2jNniNvx/lhOm4D94dUfglBuPy7Kac+c
         MX53PJTTJsAfgFbSsH+/dgeglPu3m3LaBHgDUEsa7CfPG4BS7AanwRuAUuzJLw321OINQStX5bRnjj3P
         +wNQSqoVCbdDBtsF+QPQyf3hqZw2AbYP8oaglSS3gwWiGPvDsz8EobBel0qqBaL+yyfW60JJtUAc4eVT

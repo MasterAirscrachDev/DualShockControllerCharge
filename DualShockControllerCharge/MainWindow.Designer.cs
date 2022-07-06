@@ -51,7 +51,7 @@
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 5000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.Tick);
             // 
             // ChargeIcon
             // 
@@ -73,7 +73,7 @@
             this.Controls.Add(this.TextBox);
             this.Name = "DSChargeView";
             this.Text = "DSChargeView";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.OnLoad);
             this.Enter += new System.EventHandler(this.DSChargeView_Enter);
             this.Leave += new System.EventHandler(this.DSChargeView_Leave);
             ((System.ComponentModel.ISupportInitialize)(this.ChargeIcon)).EndInit();

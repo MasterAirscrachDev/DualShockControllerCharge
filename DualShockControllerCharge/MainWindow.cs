@@ -28,12 +28,12 @@ namespace DualShockControllerCharge
             { controllerFound = false; }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void OnLoad(object sender, EventArgs e)
         {
             GetController();
         }
 
-        private void timer1_Tick(object from, EventArgs e)
+        private void Tick(object from, EventArgs e)
         {
             //called every 2 seconds
             //math says about 10% every 60 mins
