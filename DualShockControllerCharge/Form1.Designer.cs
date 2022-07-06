@@ -43,9 +43,9 @@
             this.TextBox.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.TextBox.Location = new System.Drawing.Point(12, 9);
             this.TextBox.Name = "TextBox";
-            this.TextBox.Size = new System.Drawing.Size(346, 41);
+            this.TextBox.Size = new System.Drawing.Size(168, 41);
             this.TextBox.TabIndex = 0;
-            this.TextBox.Text = "~100% Estimated 100%";
+            this.TextBox.Text = "***************";
             // 
             // timer1
             // 

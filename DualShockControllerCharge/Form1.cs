@@ -1,8 +1,5 @@
-using System;
 using DualSenseAPI;
 using DualSenseAPI.State;
-using static System.Windows.Forms.AxHost;
-using System.Linq;
 using System.Reactive.Linq;
 
 namespace DualShockControllerCharge
@@ -13,7 +10,7 @@ namespace DualShockControllerCharge
         DualSenseInputState state;
         bool controllerFound;
         int estimate = 0, lastcheck = 0, subtick = 0;
-        int maxtick = 8; //edit this if estimate is more or less than you think its supposed to be
+        int maxtick = 20; //edit this if estimate is more or less than you think its supposed to be
         public DSChargeView()
         {
             InitializeComponent();
