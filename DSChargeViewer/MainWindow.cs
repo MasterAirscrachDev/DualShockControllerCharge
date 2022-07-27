@@ -9,7 +9,6 @@ namespace DualShockControllerCharge
     {
         // this is stupid re-write
         DualSense ds;
-        DualSenseInputState state;
         bool controllerFound, accurate = false, startCheck = false, chargingOnTick = false;
         int lastcheck = 0;
         TimeSpan chargeInterval, drainInterval;
@@ -35,12 +34,6 @@ namespace DualShockControllerCharge
                 drainInterval = TimeSpan.FromSeconds(double.Parse(sr.ReadLine()));
                 chargeInterval = TimeSpan.FromSeconds(double.Parse(sr.ReadLine()));
                 sr.Close();
-                //round drain interval to the nearest second
-                drainInterval = new TimeSpan(drainInterval.Hours, drainInterval.Minutes, drainInterval.Seconds);
-                //round charge interval to the nearest second
-                chargeInterval = new TimeSpan(chargeInterval.Hours, chargeInterval.Minutes, chargeInterval.Seconds);
-
-                
             }
             catch {
                 //it doesnt exist, create it
@@ -51,18 +44,14 @@ namespace DualShockControllerCharge
         }
         void SetDurations()
         {
-            try
-            {
+            try {
                 //open stats.mem for writing
                 StreamWriter sw = new StreamWriter($"{Directory.GetCurrentDirectory()}\\stats.mem");
-                sw.WriteLine(drainInterval.TotalSeconds.ToString());
-                sw.WriteLine(chargeInterval.TotalSeconds.ToString());
+                sw.WriteLine(Math.Round(drainInterval.TotalSeconds).ToString());
+                sw.WriteLine(Math.Round(chargeInterval.TotalSeconds).ToString());
                 sw.Close();
             }
-            catch
-            {
-
-            }
+            catch { }//shouldn't fail
         }
         async void GetController()
         {
@@ -87,35 +76,23 @@ namespace DualShockControllerCharge
 
         private void Ds_OnStatePolled(DualSense sender)
         {
-            try
-            {
-                if (InvokeRequired)
-                {
-                    this.Invoke(new MethodInvoker(delegate
-                    {
-                        //called every 5 seconds
-
-                        if (controllerFound)
-                        {
-                            state = ds.InputState; //get the state of input
+            try {
+                if (InvokeRequired) {
+                    this.Invoke(new MethodInvoker(delegate {
+                        if (controllerFound) {
+                            DualSenseInputState state = ds.InputState; //get the state of input
                             bool oncharge = state.BatteryStatus.IsCharging; //are we charging?
                             if ((int)state.BatteryStatus.Level != lastcheck)
                             {
-                                if (!startCheck)
-                                { startCheck = true; lastcheck = (int)state.BatteryStatus.Level; }
-                                else
-                                {
-                                    if (accurate)
-                                    {
-                                        if (chargingOnTick && oncharge)
-                                        {
+                                if (!startCheck) { startCheck = true; lastcheck = (int)state.BatteryStatus.Level; }
+                                else {
+                                    if (accurate) {
+                                        if (chargingOnTick && oncharge) {
                                             chargeInterval = DateTime.Now - checkChange;
                                             SetDurations();
                                         }
-                                        else if (oncharge)
-                                        { chargingOnTick = true; }
-                                        else
-                                        {
+                                        else if (oncharge) { chargingOnTick = true; }
+                                        else {
                                             drainInterval = DateTime.Now - checkChange;
                                             chargingOnTick = false;
                                             SetDurations();
@@ -127,102 +104,55 @@ namespace DualShockControllerCharge
                                 }
                             }
                             string charge; int chargepercent;
-                            if (!accurate) { charge = $"~{state.BatteryStatus.Level * 10}%"; chargepercent = (int)state.BatteryStatus.Level * 10; }
+                            if (!accurate) { charge = $"~{state.BatteryStatus.Level * 10}% (Calibrating)"; chargepercent = (int)state.BatteryStatus.Level * 10; }
                             else {
-                                if (oncharge)
-                                {
-                                    //get the time between now and the last check
-                                    TimeSpan t = DateTime.Now - checkChange;
-                                    //devide chargeinterval by 10
-                                    TimeSpan s = chargeInterval / 10;
-                                    //get the number of times s devides into t
-                                    int times = (int)t.TotalSeconds / (int)s.TotalSeconds;
-                                    //charge = state.BatteryStatus.Level * 10 + times
-                                    charge = $"{state.BatteryStatus.Level * 10 + times}%";
+                                if (oncharge) {
+                                    TimeSpan t = DateTime.Now - checkChange; //get the time between now and the last check
+                                    TimeSpan s = chargeInterval / 10; //devide chargeinterval by 10
+                                    int times = (int)t.TotalSeconds / (int)s.TotalSeconds; //get the number of times s devides into t
+                                    charge = $"{state.BatteryStatus.Level * 10 + times}%"; //charge = state.BatteryStatus.Level * 10 + times
                                     chargepercent = (int)state.BatteryStatus.Level * 10 + times;
                                 }
-                                else
-                                {
-                                    //get the time between now and the last check
-                                    TimeSpan t = DateTime.Now - checkChange;
-                                    //devide draininterval by 10
-                                    TimeSpan s = drainInterval / 10;
-                                    //get the number of times s devides into t
-                                    int times = (int)t.TotalSeconds / (int)s.TotalSeconds;
-                                    //charge = state.BatteryStatus.Level * 10 - times
-                                    charge = $"{state.BatteryStatus.Level * 10 - times}%";
+                                else {
+                                    TimeSpan t = DateTime.Now - checkChange; //get the time between now and the last check
+                                    TimeSpan s = drainInterval / 10; //devide draininterval by 10
+                                    int times = (int)t.TotalSeconds / (int)s.TotalSeconds; //get the number of times s devides into t
+                                    charge = $"{state.BatteryStatus.Level * 10 - times}%"; //charge = state.BatteryStatus.Level * 10 - times
                                     chargepercent = (int)state.BatteryStatus.Level * 10 - times;
                                 }
-                                //charge = "A"; 
                             }
-                            if (oncharge)
-                            {
+                            if (oncharge) {
                                 int remaining = 100 - chargepercent;
                                 //time to charge = changeInterval / 10 * remaining
-                                TimeSpan time = chargeInterval / 10 * remaining;
-                                string[] stats =
-                                {
+                                TimeSpan time = (chargeInterval / 10) * remaining;
+                                string[] stats = {
                                     $"{charge} Charging",
-                                    $"{time.Hours}:{time.Minutes}:{time.Seconds} Remaining to full",
+                                    $"{time.Hours}:{time.Minutes.ToString("00")}:{time.Seconds.ToString("00")} Remaining to full",
                                 };
                                 SetInfo(stats);
                             }
                             else{
-                                //time to drain = changeInterval / 10 * chargepercent
-                                TimeSpan time = drainInterval / 10 * chargepercent;
-                                string[] stats =
-                                {
+                                //time to drain = drainInterval / 10 * chargepercent
+                                TimeSpan time = (drainInterval / 10) * chargepercent;
+                                string[] stats = {
                                     $"{charge}",
-                                    $"{time.Hours}:{time.Minutes}:{time.Seconds} Remaining",
-
+                                    $"{time.Hours}:{time.Minutes.ToString("00")}:{time.Seconds.ToString("00")} Remaining"
                                 };
                                 SetInfo(stats);
                             }
-                            //string[] stats =
-                            //{
-                            //    charge,
-                            //    $"Battery Charging: {state.BatteryStatus.IsCharging}",
-                            //    $"Battery Charging Time: {chargeInterval.Minutes}:{chargeInterval.Seconds}",
-                            //    $"Battery Drain Time: {drainInterval.Hours}:{drainInterval.Minutes}:{drainInterval.Seconds}",
-                            //    "---------------DEBUG",
-                            //    $"Accurate? {accurate}",
-                            //    $"FirstTick? {startCheck}",
-                            //    $"chanrge ~{state.BatteryStatus.Level * 10}%",
-                            //    $"LastTick {lastcheck}"
-                            //};
-                            //SetInfo(stats);
                         }
-                        else
-                        {
+                        else {
                             SetInfo(new string[] { "No Controller Found", "Please connect a controller" });
                             GetController();
                         }
                     }));
-
-                }
-                else
-                {
-                    // Your code here, like set text box content or get text box contents etc..
-
-                    // SAME CODE AS ABOVE
                 }
             }
-            catch
-            {
-                GetController();
-            }
-            
+            catch { GetController(); }
         }
         private void DSChargeView_Enter(object sender, EventArgs e)
         { GetController(); }
-
         private void DSChargeView_Leave(object sender, EventArgs e)
-        {
-            if(controllerFound)
-            {
-                ds.EndPolling();
-                ds.Release();
-            }
-        }
+        { if(controllerFound) { ds.EndPolling(); ds.Release(); } }
     }
 }

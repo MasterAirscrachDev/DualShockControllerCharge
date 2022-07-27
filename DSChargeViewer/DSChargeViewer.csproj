@@ -6,7 +6,13 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>DualShockControllerCharge.Program</StartupObject>
+    <ApplicationIcon>power.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="power.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Device.Net" Version="4.2.1" />
