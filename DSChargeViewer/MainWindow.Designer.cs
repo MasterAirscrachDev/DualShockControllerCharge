@@ -30,62 +30,42 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DSChargeView));
-            this.TextBox = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.ChargeIcon = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.ChargeIcon)).BeginInit();
+            this.statusIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.statusContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SuspendLayout();
             // 
-            // TextBox
+            // statusIcon
             // 
-            this.TextBox.AutoSize = true;
-            this.TextBox.Font = new System.Drawing.Font("Impact", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.TextBox.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.TextBox.Location = new System.Drawing.Point(12, 9);
-            this.TextBox.Name = "TextBox";
-            this.TextBox.Size = new System.Drawing.Size(168, 41);
-            this.TextBox.TabIndex = 0;
-            this.TextBox.Text = "***************";
+            this.statusIcon.ContextMenuStrip = this.statusContext;
+            this.statusIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("statusIcon.Icon")));
+            this.statusIcon.Text = "DSChargeView";
+            this.statusIcon.Visible = true;
             // 
-            // timer1
+            // statusContext
             // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 5000;
-            this.timer1.Tick += new System.EventHandler(this.Tick);
-            // 
-            // ChargeIcon
-            // 
-            this.ChargeIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ChargeIcon.BackgroundImage")));
-            this.ChargeIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ChargeIcon.Location = new System.Drawing.Point(421, 12);
-            this.ChargeIcon.Name = "ChargeIcon";
-            this.ChargeIcon.Size = new System.Drawing.Size(44, 50);
-            this.ChargeIcon.TabIndex = 1;
-            this.ChargeIcon.TabStop = false;
+            this.statusContext.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusContext.Name = "statusContext";
+            this.statusContext.Size = new System.Drawing.Size(61, 4);
             // 
             // DSChargeView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(477, 73);
-            this.Controls.Add(this.ChargeIcon);
-            this.Controls.Add(this.TextBox);
+            this.ClientSize = new System.Drawing.Size(277, 48);
             this.Name = "DSChargeView";
+            this.ShowInTaskbar = false;
             this.Text = "DSChargeView";
+            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Load += new System.EventHandler(this.OnLoad);
             this.Enter += new System.EventHandler(this.DSChargeView_Enter);
             this.Leave += new System.EventHandler(this.DSChargeView_Leave);
-            ((System.ComponentModel.ISupportInitialize)(this.ChargeIcon)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private Label TextBox;
-        private System.Windows.Forms.Timer timer1;
-        private PictureBox ChargeIcon;
+        private NotifyIcon statusIcon;
+        private ContextMenuStrip statusContext;
     }
 }
