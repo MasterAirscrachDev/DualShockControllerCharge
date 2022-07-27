@@ -126,8 +126,8 @@ namespace DualShockControllerCharge
                                     accurate = true;
                                 }
                             }
-                            string charge;
-                            if (!accurate) { charge = $"~{state.BatteryStatus.Level * 10}%"; }
+                            string charge; int chargepercent;
+                            if (!accurate) { charge = $"~{state.BatteryStatus.Level * 10}%"; chargepercent = (int)state.BatteryStatus.Level * 10; }
                             else {
                                 if (oncharge)
                                 {
@@ -139,6 +139,7 @@ namespace DualShockControllerCharge
                                     int times = (int)t.TotalSeconds / (int)s.TotalSeconds;
                                     //charge = state.BatteryStatus.Level * 10 + times
                                     charge = $"{state.BatteryStatus.Level * 10 + times}%";
+                                    chargepercent = (int)state.BatteryStatus.Level * 10 + times;
                                 }
                                 else
                                 {
@@ -150,22 +151,46 @@ namespace DualShockControllerCharge
                                     int times = (int)t.TotalSeconds / (int)s.TotalSeconds;
                                     //charge = state.BatteryStatus.Level * 10 - times
                                     charge = $"{state.BatteryStatus.Level * 10 - times}%";
+                                    chargepercent = (int)state.BatteryStatus.Level * 10 - times;
                                 }
                                 //charge = "A"; 
                             }
-                            string[] stats =
+                            if (oncharge)
                             {
-                            charge,
-                            $"Battery Charging: {state.BatteryStatus.IsCharging}",
-                            $"Battery Charging Time: {chargeInterval.Minutes}:{chargeInterval.Seconds}",
-                            $"Battery Drain Time: {drainInterval.Hours}:{drainInterval.Minutes}:{drainInterval.Seconds}",
-                            "---------------DEBUG",
-                            $"Accurate? {accurate}",
-                            $"FirstTick? {startCheck}",
-                            $"chanrge ~{state.BatteryStatus.Level * 10}%",
-                            $"LastTick {lastcheck}"
-                        };
-                            SetInfo(stats);
+                                int remaining = 100 - chargepercent;
+                                //time to charge = changeInterval / 10 * remaining
+                                TimeSpan time = chargeInterval / 10 * remaining;
+                                string[] stats =
+                                {
+                                    $"{charge} Charging",
+                                    $"{time.Hours}:{time.Minutes}:{time.Seconds} Remaining to full",
+                                };
+                                SetInfo(stats);
+                            }
+                            else{
+                                //time to drain = changeInterval / 10 * chargepercent
+                                TimeSpan time = drainInterval / 10 * chargepercent;
+                                string[] stats =
+                                {
+                                    $"{charge}",
+                                    $"{time.Hours}:{time.Minutes}:{time.Seconds} Remaining",
+
+                                };
+                                SetInfo(stats);
+                            }
+                            //string[] stats =
+                            //{
+                            //    charge,
+                            //    $"Battery Charging: {state.BatteryStatus.IsCharging}",
+                            //    $"Battery Charging Time: {chargeInterval.Minutes}:{chargeInterval.Seconds}",
+                            //    $"Battery Drain Time: {drainInterval.Hours}:{drainInterval.Minutes}:{drainInterval.Seconds}",
+                            //    "---------------DEBUG",
+                            //    $"Accurate? {accurate}",
+                            //    $"FirstTick? {startCheck}",
+                            //    $"chanrge ~{state.BatteryStatus.Level * 10}%",
+                            //    $"LastTick {lastcheck}"
+                            //};
+                            //SetInfo(stats);
                         }
                         else
                         {
