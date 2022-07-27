@@ -7,7 +7,6 @@ namespace DualShockControllerCharge
 {
     public partial class DSChargeView : Form
     {
-        // this is stupid re-write
         DualSense ds;
         bool controllerFound, accurate = false, startCheck = false, chargingOnTick = false;
         int lastcheck = 0;
@@ -16,7 +15,6 @@ namespace DualShockControllerCharge
         public DSChargeView() => InitializeComponent();
         private void OnLoad(object sender, EventArgs e)
         {
-            SetInfo(new string[0]);
             GetDurations();
             GetController();
         }
@@ -55,22 +53,18 @@ namespace DualShockControllerCharge
         }
         async void GetController()
         {
-            try //get the first controller
-            {
+            try { //get the first controller
+
                 ds = DualSense.EnumerateControllers().First();
                 controllerFound = true;
                 ds.Acquire(); ds.BeginPolling(10000);
                 ds.OnStatePolled += Ds_OnStatePolled;
             }
-            catch
-            { 
+            catch { 
                 controllerFound = false; 
                 SetInfo(new string[] { "No Controller Found", "Please connect a controller" });
                 while (!controllerFound)
-                {
-                    await Task.Delay(10000);
-                    GetController();
-                }
+                { await Task.Delay(10000); GetController(); }
             }
         }
 
@@ -82,8 +76,7 @@ namespace DualShockControllerCharge
                         if (controllerFound) {
                             DualSenseInputState state = ds.InputState; //get the state of input
                             bool oncharge = state.BatteryStatus.IsCharging; //are we charging?
-                            if ((int)state.BatteryStatus.Level != lastcheck)
-                            {
+                            if ((int)state.BatteryStatus.Level != lastcheck) {
                                 if (!startCheck) { startCheck = true; lastcheck = (int)state.BatteryStatus.Level; }
                                 else {
                                     if (accurate) {
@@ -123,17 +116,15 @@ namespace DualShockControllerCharge
                             }
                             if (oncharge) {
                                 int remaining = 100 - chargepercent;
-                                //time to charge = changeInterval / 10 * remaining
-                                TimeSpan time = (chargeInterval / 10) * remaining;
+                                TimeSpan time = (chargeInterval / 10) * remaining; //time to charge = changeInterval / 10 * remaining
                                 string[] stats = {
                                     $"{charge} Charging",
                                     $"{time.Hours}:{time.Minutes.ToString("00")}:{time.Seconds.ToString("00")} Remaining to full",
                                 };
                                 SetInfo(stats);
                             }
-                            else{
-                                //time to drain = drainInterval / 10 * chargepercent
-                                TimeSpan time = (drainInterval / 10) * chargepercent;
+                            else {
+                                TimeSpan time = (drainInterval / 10) * chargepercent; //time to drain = drainInterval / 10 * chargepercent
                                 string[] stats = {
                                     $"{charge}",
                                     $"{time.Hours}:{time.Minutes.ToString("00")}:{time.Seconds.ToString("00")} Remaining"
